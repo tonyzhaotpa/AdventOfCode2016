@@ -17,24 +17,24 @@ const VALID_KEYS = [
 
 const getBathroomCode = instructions => {
   let code = ""
-    let current = 5
-    for( var line of instructions.trim().split( /\n/ ) ) {
-      for( var i = 0; i < line.length; i++ ) {
-          const move = line.charAt(i)
-          let next = current
-          switch (move) {
-            case 'L': next -= 1; break
-            case 'R': next += 1; break
-            case 'U': current < 5 || current > 12 ? next -=2 : next -= 4; break
-            case 'D': current < 2 || current > 9 ? next +=2 : next += 4; break
-          }
-          if ( VALID_KEYS[current].indexOf(next) != -1 ) {
-            current = next
-          }
+  let current = 5
+  for( var line of instructions.trim().split( /\n/ ) ) {
+    for( var i = 0; i < line.length; i++ ) {
+      const move = line.charAt(i)
+      let next = current
+      switch (move) {
+        case 'L': next -= 1; break
+        case 'R': next += 1; break
+        case 'U': current < 5 || current > 12 ? next -=2 : next -= 4; break
+        case 'D': current < 2 || current > 9 ? next +=2 : next += 4; break
       }
-      code += current > 9 ? String.fromCharCode( 55 + current ) : current
+      if ( VALID_KEYS[current].indexOf(next) != -1 ) {
+        current = next
+      }
     }
-    return code
+    code += current > 9 ? String.fromCharCode( 55 + current ) : current
+  }
+  return code
 }
 
 const input = document.getElementById( "input" )
