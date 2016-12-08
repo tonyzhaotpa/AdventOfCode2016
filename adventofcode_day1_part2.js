@@ -1,10 +1,10 @@
 const UNIT_VECTORS = [ [0,1], [1,0], [0,-1], [-1,0] ]
 
 const updateIndex = ( current, turn ) => {
-    switch ( turn ) {
-      case "R": return ( current + 1 ) % 4
-      case "L": return ( current + 3 ) % 4
-    }
+  switch ( turn ) {
+    case "R": return ( current + 1 ) % 4
+    case "L": return ( current + 3 ) % 4
+  }
 }
 
 const getFirstRevisit = input => {
