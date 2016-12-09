@@ -9,7 +9,7 @@ const getSumSectorIds = input => {
     let words = letters.reduce( (words, char) => {
       for( var i in words ) {
       	if( words[i].charAt(0) == char ) {
-      		words[i] += char
+          words[i] += char
           return words
       	}
       }
