@@ -18,11 +18,11 @@ const getSectorIdWithPattern = ( input, pattern ) => {
       .split( '' )
       .reduce( ( words, char ) => {
           for( var i in words ) {
-      	     if( words[i].charAt(0) == char ) {
-               words[i] += char
-               return words
-      	      }
+            if( words[i].charAt(0) == char ) {
+              words[i] += char
+              return words
             }
+          }
           words.push(char)
           return words
         }, [] )
@@ -33,7 +33,7 @@ const getSectorIdWithPattern = ( input, pattern ) => {
           return b.length - a.length
         } )
       .splice( 0,5 )
-      .reduce( (checksum, obj) => checksum.concat( obj.charAt(0) ), "" )
+      .reduce( ( checksum, obj ) => checksum.concat( obj.charAt(0) ), "" )
 
     if( checksum == calc_checksum ) {
       let decrypted = name.split( '' )
