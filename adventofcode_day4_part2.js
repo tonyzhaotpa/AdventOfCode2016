@@ -1,6 +1,6 @@
 const rotate = ( code, n ) => {
   if ( code >= 97 && code <= 122 ) {
-    return String.fromCharCode( ( (code - 97 + n)  % 26)  + 97 )
+    return String.fromCharCode( ( ( code - 97 + n )  % 26)  + 97 )
   }
   return ' '
 }
@@ -14,27 +14,25 @@ const getSectorIdWithPattern = ( input, pattern ) => {
     const id = Number.parseInt( room_info[1] )
     const checksum = room_info[2]
 
-    let words = name.replace( /[\-]/g, '' )
+    let calc_checksum = name.replace( /[\-]/g, '' )
       .split( '' )
       .reduce( ( words, char ) => {
-      for( var i in words ) {
-      	if( words[i].charAt(0) == char ) {
-          words[i] += char
+          for( var i in words ) {
+      	     if( words[i].charAt(0) == char ) {
+               words[i] += char
+               return words
+      	      }
+            }
+          words.push(char)
           return words
-      	}
-      }
-      words.push(char)
-      return words
-    }, [] )
-
-    words.sort( ( a, b ) => {
-      if( a.length == b.length ) {
-        return a < b ? -1 : 0
-      }
-      return b.length - a.length
-    } )
-
-    let calc_checksum = words.splice( 0,5 )
+        }, [] )
+      .sort( ( a, b ) => {
+          if( a.length == b.length ) {
+            return a < b ? -1 : 0
+          }
+          return b.length - a.length
+        } )
+      .splice( 0,5 )
       .reduce( (checksum, obj) => checksum.concat( obj.charAt(0) ), "" )
 
     if( checksum == calc_checksum ) {
