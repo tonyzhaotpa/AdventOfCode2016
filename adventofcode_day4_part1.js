@@ -1,12 +1,14 @@
 const getSumSectorIds = input => {
   let sum = 0
   for( var room of input.trim().split( /\n/ ) ) {
-    const room_checksum = room.match( /\[[a-z]+\]/ )[0].slice( 1,-1 )
-    const id = Number.parseInt( room.match( /\d+/ )[0] )
-    room = room.slice( 0,-7 ).replace( /[\d\-]/g, '' )
+    const room_info = room.trim().split( /([a-z\-]+)+(\d+)\[([a-z]+)\]/ )
+      .filter( str => str != undefined && str.length > 0 )
+    const name = room_info[0]
+    const id = Number.parseInt( room_info[1] )
+    const checksum = room_info[2]
 
-    let letters = room.split('')
-    let words = letters.reduce( (words, char) => {
+    let words = name.replace( /[\-]/g, '' ).split('')
+      .reduce( (words, char) => {
       for( var i in words ) {
       	if( words[i].charAt(0) == char ) {
           words[i] += char
@@ -15,17 +17,20 @@ const getSumSectorIds = input => {
       }
       words.push(char)
       return words
-    }, [])
+    }, [] )
 
-    words.sort()
-    words.sort( (obj1, obj2) => obj2.length - obj1.length )
+    words.sort( (a, b) => {
+      if( a.length == b.length ) {
+        return a < b ? -1 : 0
+      }
+      return b.length - a.length
+    } )
 
-    let calc_checksum = ""
-    for( var i = 0; i < 5 && i < words.length; i++ ) {
-      calc_checksum += words[i].charAt(0)
-    }
-    if( room_checksum == calc_checksum ) {
-     sum += id
+    let calc_checksum = words.splice( 0,5 )
+      .reduce( (checksum, obj) => checksum.concat( obj.charAt(0) ), "" )
+
+    if( checksum == calc_checksum ) {
+      sum += id
     }
   }
   return sum
