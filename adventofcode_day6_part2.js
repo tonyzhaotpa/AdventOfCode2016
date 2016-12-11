@@ -10,21 +10,21 @@ const getMessage = input => {
     )
   }
 
-  return stats.reduce( ( aggregate, stat ) => {
-      for( var i in aggregate ) {
-        if( aggregate[i].index == stat.index && aggregate[i].char == stat.char ) {
-          aggregate[i].freq += stat.freq
-          return aggregate
+  return stats.reduce( ( aggr, stat ) => {
+      for( var i in aggr ) {
+        if( aggr[i].index == stat.index && aggr[i].char == stat.char ) {
+          aggr[i].freq += stat.freq
+          return aggr
         }
       }
-      aggregate.push( stat )
-      return aggregate
-    }, [] ).reduce(  ( mode, aggregate ) => {
-      if( mode[aggregate.index] == undefined ) {
-        mode[aggregate.index] = {}
-        mode[aggregate.index].char = aggregate.char, mode[aggregate.index].freq = aggregate.freq
-      } else if( mode[aggregate.index].freq > aggregate.freq ) {
-      	mode[aggregate.index].char = aggregate.char, mode[aggregate.index].freq = aggregate.freq
+      aggr.push( stat )
+      return aggr
+    }, [] ).reduce(  ( mode, aggr ) => {
+      if( mode[aggr.index] == undefined ) {
+        mode[aggr.index] = {}
+        mode[aggr.index].char = aggr.char, mode[aggr.index].freq = aggr.freq
+      } else if( mode[aggr.index].freq > aggr.freq ) {
+      	mode[aggr.index].char = aggr.char, mode[aggr.index].freq = aggr.freq
       }
       return mode
     }, [] ).reduce( ( message, mode ) => message.concat( mode.char ), "" )
