@@ -22,8 +22,7 @@ const getMessage = input => {
     }, [] ).reduce(  ( mode, aggregate ) => {
       if( mode[aggregate.index] == undefined ) {
         mode[aggregate.index] = {}
-        mode[aggregate.index].char = aggregate.char
-        mode[aggregate.index].freq = aggregate.freq
+        mode[aggregate.index].char = aggregate.char, mode[aggregate.index].freq = aggregate.freq
       } else if( mode[aggregate.index].freq < aggregate.freq ) {
       	mode[aggregate.index].char = aggregate.char, mode[aggregate.index].freq = aggregate.freq
       }
