@@ -7,8 +7,8 @@ let stack = undefined
 let index = 0, n = 0
 let result = ""
 
-readable.on('readable', () => {
-  while ((symbol = readable.read(1)) !== null) {
+readable.on("readable", () => {
+  while((symbol = readable.read(1)) !== null) {
     if(stack !== undefined) {
       if(index == 0 && stack.length > 0) {
         result += Array(n+1).join(stack.join(''))
@@ -30,5 +30,6 @@ readable.on('readable', () => {
     }
   }
 }).on('close', () => {
+  console.log("result", result)
   console.log("decompressed length of file", result.replace(/\s/, '').length)
 })
