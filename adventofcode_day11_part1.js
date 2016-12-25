@@ -16,12 +16,17 @@ const valid_moves = [
 
 const root = p => [p]
 const reject = steps => {
+  if(steps.length >= min_steps) {
+    return true
+  }
   for(var i = 0; i < steps.length - 1; i++) {
-    if(steps[i].diag.every((f,index) => ms(f).length == ms(last(steps).diag[index]).length && gs(f).length == gs(last(steps).diag[index]).length)) {
+    if(steps[i].diag.every((f,index) =>
+      ms(f).length == ms(last(steps).diag[index]).length && gs(f).length == gs(last(steps).diag[index]).length)) {
       return true
     }
   }
-  if(steps.length >= min_steps) {
+  if(prune.length > 1 && prune.some(step => step.diag.every((f,index) =>
+    f.toString() == last(steps).diag[index].toString()))) {
     return true
   }
   return last(steps).diag.some(f => gs(f).length > 0 && ms(f).length > gs(f).length)
@@ -51,6 +56,7 @@ const next = (steps,moves) => {
   return null
 }
 let min_steps = Number.POSITIVE_INFINITY
+let prune = []
 const backtrack = steps => {
   if(reject(steps)) {
     return
@@ -67,6 +73,7 @@ const backtrack = steps => {
     steps.pop()
     candidate = next(candidate,moves)
   }
+  prune.push({diag: last(steps).diag.slice(), e: last(steps).e})
 }
 
 backtrack(root({diag: ["RTrtCcOP","op","",""], e: 0}))
