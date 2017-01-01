@@ -20,18 +20,18 @@ const reject = steps => {
     return true
   }
   for(var i = 0; i < steps.length - 1; i++) {
-    if(steps[i].diag.every((f,index) =>
-      ms(f).length == ms(last(steps).diag[index]).length && gs(f).length == gs(last(steps).diag[index]).length)) {
+    if(steps[i].floors.every((f,index) =>
+      ms(f).length == ms(last(steps).floors[index]).length && gs(f).length == gs(last(steps).floors[index]).length)) {
       return true
     }
   }
-  if(prune.length > 1 && prune.some(step => step.diag.every((f,index) =>
-    f.toString() == last(steps).diag[index].toString()))) {
+  if(prune.length > 1 && prune.some(step => step.floors.every((f,index) =>
+    f.toString() == last(steps).floors[index].toString()))) {
     return true
   }
-  return last(steps).diag.some(f => gs(f).length > 0 && ms(f).length > gs(f).length)
+  return last(steps).floors.some(f => gs(f).length > 0 && ms(f).length > gs(f).length)
 }
-const accept = steps => last(steps).diag[3].length == 10
+const accept = steps => last(steps).floors[3].length == 10
 const output = steps => {
   console.log("---------- Solution ----------")
   steps.forEach((step,index) => {
@@ -41,19 +41,30 @@ const output = steps => {
 const next = (steps,moves) => {
   while((move = moves.shift()) !== undefined) {
     let curr_step = last(steps)
-    if((move.charAt(0) == '-' && curr_step.e == 0) || (move.charAt(0) == '+' && curr_step.e == 3)) {
-      continue
-    }
-   if(move.substring(1).split('').every(char => curr_step.diag[curr_step.e].includes(char))) {
-      let next_step = {diag: curr_step.diag.slice(), e: curr_step.e}
-      next_step.diag[next_step.e] = curr_step.diag[curr_step.e].replace(new RegExp('\[' + move.substring(1) + '\]', "g"), '')
-      next_step.e = move.charAt(0) == '-' ? curr_step.e - 1 : curr_step.e + 1
-      next_step.diag[next_step.e] += move.substring(1)
-      steps.push(next_step)
-      return steps
-    }
+    let next_step = {floors: curr_step.floors.slice(), e: curr_step.e}
+    next_step.floors[next_step.e] = curr_step.floors[curr_step.e].replace(new RegExp('\[' + move.substring(1) + '\]', "g"), '')
+    next_step.e = move.charAt(0) == '-' ? curr_step.e - 1 : curr_step.e + 1
+    next_step.floors[next_step.e] += move.substring(1)
+    steps.push(next_step)
+    return steps
   }
   return null
+}
+const lookahead = steps => {
+  let curr_step = last(steps)
+  return valid_moves.reduce((result,move) => {
+    if((move.charAt(0) == '-' && curr_step.e == 0) || (move.charAt(0) == '+' && curr_step.e == 3)) {
+      return result
+    }
+    if((move.length > 2 && curr_step.floors[curr_step.e].length < 2)) {
+      return result
+    }
+    if(!move.substring(1).split('').every(char => curr_step.floors[curr_step.e].includes(char))) {
+      return result
+    }
+    result.push(move)
+    return result
+  },[])
 }
 let min_steps = Number.POSITIVE_INFINITY
 let prune = []
@@ -66,14 +77,14 @@ const backtrack = steps => {
     output(steps)
     return
   }
-  let moves = valid_moves.slice()
+  let moves = lookahead(steps)
   let candidate = next(steps,moves)
   while(candidate !== null) {
     backtrack(candidate)
     steps.pop()
     candidate = next(candidate,moves)
   }
-  prune.push({diag: last(steps).diag.slice(), e: last(steps).e})
+  prune.push({floors: last(steps).floors.slice(), e: last(steps).e})
 }
 
-backtrack(root({diag: ["RTrtCcOP","op","",""], e: 0}))
+backtrack(root({floors: ["RTrtCcOP","op","",""], e: 0}))
